@@ -6,7 +6,7 @@ case "$1" in
     start)
         if [ ! -d www/dna2bpm ]; then
             echo "cloning a fresh copy"
-            git clone -b development https://gitlab.com/dna2/origin.git ./www/dna2bpm
+            git clone https://github.com/juanitomint/dna2bpm.git ./www/dna2bpm
         fi
         
         echo –n “Starting stack: stack”
