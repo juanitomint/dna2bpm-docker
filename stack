@@ -1,0 +1,59 @@
+#!/bin/bash
+  type docker-compose >/dev/null 2>&1 || { echo >&2 "I require docker-compose but it's not installed.  Aborting."; exit 1; }
+  type git >/dev/null 2>&1 || { echo >&2 "I git package but it's not installed.  Aborting."; exit 1; }
+
+case "$1" in
+    start)
+        if [ ! -d www/dna2bpm ]; then
+            echo "cloning a fresh copy"
+            git clone -b development https://gitlab.com/dna2/origin.git ./www/dna2bpm
+        fi
+        
+        echo –n “Starting stack: stack”
+        docker-compose up -d --remove-orphans $2
+        echo “.”
+        ;;
+    stop) 
+          echo –n “Stopping stack: stack”
+            docker-compose stop $2
+           ;;
+    down) 
+        echo “stack is going bye bye!”
+            docker-compose down
+          echo “.”
+          ;;
+    pull) 
+        echo –n “Pulling new images”
+            docker-compose pull
+          echo “.”
+          ;;
+   restart)
+          echo –n “Restarting stack:”
+            echo “.”
+                docker-compose restart $2
+            ;;
+    status)
+          echo –n “STATUS”
+          echo “.”
+              docker-compose ps
+         ;;
+   remove)
+          echo –n “Removing stack:”
+                docker-compose stop $2
+            echo “.”
+                docker-compose rm -f -v $2
+            ;;
+    console)
+        CWD="${PWD##*/}"
+        CWD="${CWD//_}"
+        MACHINE=$CWD
+        MACHINE+="_$2_1"
+        echo "interactive console to: $MACHINE"
+        docker exec -it $MACHINE bash
+        ;;
+        *)
+          echo "Usage: /etc/init.d/stack start|stop|restart|pull|status|remove"
+          echo "Usage: ./stack console servicename // creates interactive console to a service by its name"
+          exit 1
+          ;;
+    esac

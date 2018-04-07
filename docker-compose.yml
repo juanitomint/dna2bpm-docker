@@ -1,0 +1,26 @@
+version: "3"
+services:
+  editor:
+    image: juanitomint/c9collab:php7
+    volumes:
+        - ./www/dna2bpm:/workspace
+        # - ./.ssh/:/root/.ssh
+        # - ./.gitconfig/:/root/.gitconfig
+    ports:
+      - "9022:80"
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./backups:/backups
+
+
+  web:
+    image: juanitomint/php7
+    ports:
+      - "80:80"
+    volumes:
+      - ./www:/var/www/html
+      - ./www/dna2bpm:/var/www/html/dna3
+      - ./config/php7/php.ini:/usr/local/etc/php/php.ini
