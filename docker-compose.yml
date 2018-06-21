@@ -1,13 +1,14 @@
 version: "3"
 services:
-  editor:
-    image: juanitomint/c9collab:php7
-    volumes:
-        - ./www/dna2bpm:/workspace
-        # - ./.ssh/:/root/.ssh
-        # - ./.gitconfig/:/root/.gitconfig
-    ports:
-      - "9022:80"
+  # uncomment  lines below  if you need an inline c9 editor 
+  # c9:
+  #   image: juanitomint/c9collab:php7
+  #   volumes:
+  #       - ./www/dna2bpm:/workspace
+  #       # - ./.ssh/:/root/.ssh
+  #       # - ./.gitconfig/:/root/.gitconfig
+  #   ports:
+  #     - "9022:80"
   mongo:
     image: mongo:latest
     ports:
