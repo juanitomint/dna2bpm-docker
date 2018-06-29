@@ -1,4 +1,7 @@
 version: "3"
+volumes:
+  mongodb:
+  
 services:
   # uncomment  lines below  if you need an inline c9 editor 
   # c9:
@@ -15,15 +18,32 @@ services:
       - "27017:27017"
     volumes:
       - ./backups:/backups
+      - mongodb:/data/db
       # uncomment this line if you are short on RAM memmory (<4GB)
       # - ./config/mongod.conf:/etc/mongod.conf
 
-
+  formio:
+    image: node:7
+    depends_on:
+      - mongo
+    volumes:
+      - ./www/formio:/usr/src/app
+      - ./backups:/backups
+    working_dir: /usr/src/app
+    ### comment this for new versions / setups
+    command: npm start
+    ports:
+      - "3001:3001"
+      - "8080:8080"
+    stdin_open: true
+    tty: true
+    
   web:
     image: juanitomint/php7
+    depends_on:
+      - mongo
     ports:
       - "80:80"
     volumes:
-      - ./www:/var/www/html
-      - ./www/dna2bpm:/var/www/html/dna3
+      - ./www/dna2bpm:/var/www/html
       - ./config/php7/php.ini:/usr/local/etc/php/php.ini
